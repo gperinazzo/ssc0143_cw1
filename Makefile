@@ -1,23 +1,30 @@
-LINK=-lm
+LINK=-lm -lpthread
 ODIR=./obj
 OUT=./bin/Trab1Conc
 SRC=./src
 INC=-Iinc
 
-_OBJS = mainSequential.o matrix_reader.o
+_OBJS_SEQ = mainSequential.o matrix_reader.o
+_OBJS_PAR = mainParallel.o matrix_reader.o threadpool.o
 
-OBJS = $(patsubst %, $(ODIR)/%, $(_OBJS))
+OBJS_SEQ = $(patsubst %, $(ODIR)/%, $(_OBJS_SEQ))
+OBJS_PAR = $(patsubst %, $(ODIR)/%, $(_OBJS_PAR))
 
 
-all: $(OBJS)
-	gcc -o $(OUT) $(OBJS) $(LINK)  
+all: sequential parallel
+	
+sequential: $(OBJS_SEQ)
+	gcc -g -o $(OUT)_seq $(OBJS_SEQ) $(LINK)
+
+parallel: $(OBJS_PAR)
+	gcc -g -o $(OUT)_par $(OBJS_PAR) $(LINK)
 
 $(ODIR):
 	mkdir -p $(ODIR)
 
 
 $(ODIR)/%.o: $(SRC)/%.c | $(ODIR) 
-	gcc -Wall -c $< $(INC) -o $@
+	gcc -g -Wall -c $< $(INC) -o $@
 
 run:
 	$(OUT)
