@@ -70,15 +70,18 @@ void swap_vectors (float ** v1, float ** v2)
 
 int main(int argc, char ** argv)
 {
-	int i, j, order, num_threads = 8, counter =0, *workload, sum;
+	int i, j, order, num_threads = 4, counter =0, *workload, sum;
 	float * current = NULL, * old = NULL, * test = NULL, sum_test;
 	threadpool_t pool;
 	threadpool_work_t * work_cur, *work_next, *work;
 	threadpool_future_t * futures_cur, *futures_next, *futures;
 	work_info *info, *info_cur, *info_next;
+	TaskDescriptor * task;
 
+	if (argc >= 2)
+		num_threads = atoi(argv[1]);
 
-	TaskDescriptor * task = readTask(stdin);
+	task = readTask(stdin);
 	current = malloc(sizeof(float) * task->VECTOR.order);
 	old = malloc(sizeof(float) * task->VECTOR.order);
 	test = malloc (sizeof(float) * (task->VECTOR.order + 1) );

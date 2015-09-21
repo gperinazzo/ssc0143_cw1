@@ -27,11 +27,14 @@ $(ODIR):
 $(ODIR)/%.o: $(SRC)/%.c | $(ODIR) 
 	gcc $(OPT) -Wall -c $< $(INC) -o $@
 
+test:
+	sh ./script/gen_data.sh
+
 run:
 	$(OUT)
 
 clean:
-	rm -f $(ODIR)/*.o $(OUT)
+	rm -f $(ODIR)/*.o $(OUT) output/*.out
 
 zip:
 	zip -r Trab1-7153362 *
