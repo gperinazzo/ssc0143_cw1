@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
 	order = task->VECTOR.order;
 
 	
-	for (counter = 0; counter < task->ITE_MAX; ++counter)
+	for (counter = 0; counter < task->ITE_MAX; )
 	{
 		float max_dif, max_value, error, value;
 		swap_vectors(&old, &current);
@@ -60,6 +60,10 @@ int main(int argc, char ** argv)
 			}
 			current[i] = task->VECTOR.value[i] - sum;
 		}
+
+		// We have ended the iteration, we increase the counter here
+		// so that if we break out of the for loop the counter will be correct
+		++counter
 
 		// Calculate the error
 		// Its calculated as
