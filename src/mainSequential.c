@@ -63,7 +63,7 @@ int main(int argc, char ** argv)
 
 		// We have ended the iteration, we increase the counter here
 		// so that if we break out of the for loop the counter will be correct
-		++counter
+		++counter;
 
 		// Calculate the error
 		// Its calculated as
@@ -82,6 +82,7 @@ int main(int argc, char ** argv)
 		error = max_dif/max_value;
 		if (error < task->ERROR)
 			break;
+
 
 	}
 

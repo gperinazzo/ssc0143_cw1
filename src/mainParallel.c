@@ -176,7 +176,6 @@ int main(int argc, char ** argv)
 	memcpy (current, task->VECTOR.value, sizeof(float) * task->VECTOR.order);
 	order = task->VECTOR.order;
 
-
 	for (counter = 0; counter < task->ITE_MAX; )
 	{
 		float max_dif, max_value;
@@ -189,13 +188,15 @@ int main(int argc, char ** argv)
 
 		// Do some work on the next batch while the worker threads finish the iteration
 		threadpool_future_reuse(futures_next, num_threads);
-
-		// Wait until the works end
-		threadpool_future_waiton(futures_cur, num_threads);
-
+		
 		// We have ended the iteration, we increase the counter here
 		// so that if we break out of the for loop the counter will be correct
-		++counter
+		++counter;
+
+		// Wait until the current work end
+		threadpool_future_waiton(futures_cur, num_threads);
+
+		
 
 		// This batch is complete, calculate the maximum error
 		// This is a sequential procedure between parallel sections
@@ -212,6 +213,7 @@ int main(int argc, char ** argv)
 
 		if (max_dif / max_value < task->ERROR)
 			break; 
+		
 	}
 
 	sum_test = 0.0;

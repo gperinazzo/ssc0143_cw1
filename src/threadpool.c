@@ -17,7 +17,7 @@ void threadpool_future_init(threadpool_future_t * future, int size)
 void threadpool_future_waiton(threadpool_future_t * future, int size)
 {
 	int i;
-	for (i = 0; i < size; ++i)
+	for (i = size - 1; i >= 0; --i)
 	{
 		pthread_mutex_lock(&future[i].mutex);
 		while(!future[i].complete_flag)

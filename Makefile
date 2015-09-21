@@ -34,7 +34,7 @@ run:
 	$(OUT)
 
 clean:
-	rm -f $(ODIR)/*.o $(OUT) output/*.out
+	rm -f $(ODIR)/*.o $(OUT)
 
 zip:
 	zip -r Trab1-7153362 *
