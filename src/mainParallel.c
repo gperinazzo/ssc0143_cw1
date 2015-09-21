@@ -128,6 +128,10 @@ int main(int argc, char ** argv)
 	threadpool_work_init(work, num_threads * 2);
 	threadpool_future_init(futures, num_threads * 2);
 
+	// Set up the work information
+	// Since we have 2 * num_threads works, we can prepare both batches
+	// Since information for each batch never actually changes (aside from the current and old
+	// vectors that are swapped) we dont need to change any of this during the loop execution
 	sum = 0;
 	for (i = 0; i < num_threads; ++i)
 	{
@@ -173,9 +177,8 @@ int main(int argc, char ** argv)
 	order = task->VECTOR.order;
 
 
-	for (counter = 0; counter < task->ITE_MAX; ++counter)
+	for (counter = 0; counter < task->ITE_MAX; )
 	{
-		fflush(stdout);
 		float max_dif, max_value;
 		// Swap vectors for the next iteration
 		swap_vectors(&old, &current);
@@ -189,6 +192,10 @@ int main(int argc, char ** argv)
 
 		// Wait until the works end
 		threadpool_future_waiton(futures_cur, num_threads);
+
+		// We have ended the iteration, we increase the counter here
+		// so that if we break out of the for loop the counter will be correct
+		++counter
 
 		// This batch is complete, calculate the maximum error
 		// This is a sequential procedure between parallel sections
