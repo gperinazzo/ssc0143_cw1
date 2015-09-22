@@ -42,12 +42,15 @@ TaskDescriptor * readTask (FILE * input)
 	if (td)
 	{
 		td->MATRIX.value = NULL;
-		fscanf(input, "%d\n%d\n%f\n%d", &td->MATRIX.order, &td->ROW_TEST, &td->ERROR, &td->ITE_MAX);
+		if (4 != fscanf(input, "%d\n%d\n%lf\n%d", &td->MATRIX.order, &td->ROW_TEST, &td->ERROR, &td->ITE_MAX))
+		{
+			fprintf(stderr, "fcanf unable to read all expected values\n");
+		}
 		td->VECTOR.order = td->MATRIX.order;
 		
-		td->MATRIX.value = malloc(sizeof(float*) * td->MATRIX.order);
+		td->MATRIX.value = malloc(sizeof(double*) * td->MATRIX.order);
 
-		row_size = sizeof(float) * td->MATRIX.order;
+		row_size = sizeof(double) * td->MATRIX.order;
 
 		td->VECTOR.value  = malloc(row_size);
 		
@@ -57,12 +60,14 @@ TaskDescriptor * readTask (FILE * input)
 
 		for (i = 0; i < td->MATRIX.order; ++i)
 			for (j = 0; j < td->MATRIX.order; ++j)
-				fscanf(input, "%f", &td->MATRIX.value[i][j]);
+				if (!fscanf(input, "%lf", &td->MATRIX.value[i][j]))
+					fprintf(stderr, "fcanf unable to read all expected values\n");
+		
 
 
 		for (i = 0; i < td->VECTOR.order; ++i)
-			fscanf(input, "%f", &td->VECTOR.value[i]);
-
+			if(!fscanf(input, "%lf", &td->VECTOR.value[i]))
+				fprintf(stderr, "fcanf unable to read all expected values\n");
 
 
 	}

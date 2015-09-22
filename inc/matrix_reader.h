@@ -40,7 +40,7 @@
  **/
 typedef struct 
 {
-	float ** value;
+	double ** value;
 	int order;
 } matrix_t;
 
@@ -50,7 +50,7 @@ typedef struct
  **/
 typedef struct
 {
-	float * value;
+	double * value;
 	int order;
 } vector_t;
 
@@ -63,7 +63,7 @@ typedef struct
 {
 	int ITE_MAX;
 	int ROW_TEST;
-	float ERROR;
+	double ERROR;
 	matrix_t MATRIX;
 	vector_t VECTOR;
 } TaskDescriptor;

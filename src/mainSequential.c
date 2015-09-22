@@ -35,9 +35,9 @@
 #include <math.h>
 #include "matrix_reader.h"
 
-void swap_vectors (float ** v1, float ** v2)
+void swap_vectors (double ** v1, double ** v2)
 {
-	float * tmp = *v1;
+	double * tmp = *v1;
 	*v1 = *v2;
 	*v2 = tmp;
 }
@@ -45,19 +45,19 @@ void swap_vectors (float ** v1, float ** v2)
 int main(int argc, char ** argv)
 {
 	int i, j, counter, order;
-	float * current = NULL, * old = NULL, * test = NULL, sum_test;
+	double * current = NULL, * old = NULL, * test = NULL, sum_test;
 	
 	// Setup:
 	// TaskDescriptor has all the info read from the input
 	TaskDescriptor * task = readTask(stdin);
-	current = malloc(sizeof(float) * task->VECTOR.order);
-	old = malloc(sizeof(float) * task->VECTOR.order);
-	test = malloc (sizeof(float) * (task->VECTOR.order + 1) );
+	current = malloc(sizeof(double) * task->VECTOR.order);
+	old = malloc(sizeof(double) * task->VECTOR.order);
+	test = malloc (sizeof(double) * (task->VECTOR.order + 1) );
 
 	// test vector saves the original values of the matrix row and the value required from the vector for testing
 	// after the algorithm has ended.
 	// Since we only test one row, this is a good approach to save memory
-	memcpy(test, task->MATRIX.value[task->ROW_TEST], sizeof(float) * task->MATRIX.order);
+	memcpy(test, task->MATRIX.value[task->ROW_TEST], sizeof(double) * task->MATRIX.order);
 	test[task->VECTOR.order] = task->VECTOR.value[task->ROW_TEST];
 
 	/* Start of the algorithm */
@@ -71,18 +71,18 @@ int main(int argc, char ** argv)
 		task->VECTOR.value[i] /=  diagonal_value;
 		task->MATRIX.value[i][i] = 0;
 	}
-	memcpy (current, task->VECTOR.value, sizeof(float) * task->VECTOR.order);
+	memcpy (current, task->VECTOR.value, sizeof(double) * task->VECTOR.order);
 	order = task->VECTOR.order;
 
 	
 	for (counter = 0; counter < task->ITE_MAX; )
 	{
-		float max_dif, max_value, error, value;
+		double max_dif, max_value, error, value;
 		swap_vectors(&old, &current);
 
 		for (i = 0; i < order; ++i)
 		{
-			float sum = 0.0;
+			double sum = 0.0;
 			for (j = 0; j < order; ++j)
 			{
 				// We know value[i][i] is 0, it won't change the value

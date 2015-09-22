@@ -38,18 +38,18 @@
 
 typedef struct
 {
-	float * current;
-	float * old;
+	double * current;
+	double * old;
 	matrix_t * matrix;
 	vector_t * vector;
 	int start, end;
-	float max_dif, max_value;
+	double max_dif, max_value;
 } work_info;
 
 void work_func(void * argument)
 {
 	int i, j, order; 
-	float max_dif, max_value, value;
+	double max_dif, max_value, value;
 	work_info * info = (work_info*) argument;
 
 	max_dif = -1.0f;
@@ -58,7 +58,7 @@ void work_func(void * argument)
 
 	for(i = info->start ; i < info->end; ++i)
 	{
-		float sum = 0.0f;
+		double sum = 0.0f;
 		for (j = 0; j < order; ++j)
 		{
 			sum += (info->matrix->value[i][j] * info->old[j]);
@@ -91,9 +91,9 @@ void swap_pointer (void ** p1, void ** p2)
 	*p2 = aux;
 }
 
-void swap_vectors (float ** v1, float ** v2)
+void swap_vectors (double ** v1, double ** v2)
 {
-	float * tmp = *v1;
+	double * tmp = *v1;
 	*v1 = *v2;
 	*v2 = tmp;
 }
@@ -102,7 +102,7 @@ void swap_vectors (float ** v1, float ** v2)
 int main(int argc, char ** argv)
 {
 	int i, j, order, num_threads = 4, counter =0, *workload, sum;
-	float * current = NULL, * old = NULL, * test = NULL, sum_test;
+	double * current = NULL, * old = NULL, * test = NULL, sum_test;
 	threadpool_t pool;
 	threadpool_work_t * work_cur, *work_next, *work;
 	threadpool_future_t * futures_cur, *futures_next, *futures;
@@ -113,9 +113,9 @@ int main(int argc, char ** argv)
 		num_threads = atoi(argv[1]);
 
 	task = readTask(stdin);
-	current = malloc(sizeof(float) * task->VECTOR.order);
-	old = malloc(sizeof(float) * task->VECTOR.order);
-	test = malloc (sizeof(float) * (task->VECTOR.order + 1) );
+	current = malloc(sizeof(double) * task->VECTOR.order);
+	old = malloc(sizeof(double) * task->VECTOR.order);
+	test = malloc (sizeof(double) * (task->VECTOR.order + 1) );
 	workload = malloc(sizeof(int) * num_threads);
 
 	sum = 0;
@@ -140,7 +140,7 @@ int main(int argc, char ** argv)
 	// test vector saves the original values of the matrix row and the value required from the vector for testing
 	// after the algorithm has ended.
 	// Since we only test one row, this is a good approach to save memory
-	memcpy(test, task->MATRIX.value[task->ROW_TEST], sizeof(float) * task->MATRIX.order);
+	memcpy(test, task->MATRIX.value[task->ROW_TEST], sizeof(double) * task->MATRIX.order);
 	test[task->VECTOR.order] = task->VECTOR.value[task->ROW_TEST];
 
 	// Initialize work definitions and futures
@@ -204,12 +204,12 @@ int main(int argc, char ** argv)
 		task->VECTOR.value[i] /=  diagonal_value;
 		task->MATRIX.value[i][i] = 0;
 	}
-	memcpy (current, task->VECTOR.value, sizeof(float) * task->VECTOR.order);
+	memcpy (current, task->VECTOR.value, sizeof(double) * task->VECTOR.order);
 	order = task->VECTOR.order;
 
 	for (counter = 0; counter < task->ITE_MAX; )
 	{
-		float max_dif, max_value;
+		double max_dif, max_value;
 		// Swap vectors for the next iteration
 		swap_vectors(&old, &current);
 		swap_pointer((void**)&info_cur, (void**)&info_next);
