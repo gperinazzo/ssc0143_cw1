@@ -11,7 +11,7 @@ do
     (/usr/bin/time -f%e bin/Trab1Conc_seq < data/${1}.txt) 2>> output/seq_${1}.out > output/seq_${1}_result.out
 done
 
-for i in `seq 2 8`
+for i in `seq 2 4`
 do
     for j in `seq 1 10`
     do
